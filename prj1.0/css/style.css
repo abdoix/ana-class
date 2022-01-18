@@ -1,0 +1,126 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+select:required:invalid {
+  color: #666;
+}
+p {
+  color: #b3b3b3;
+  font-weight: 300; 
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif; }
+
+a {
+  -webkit-transition: .3s all ease;
+  -o-transition: .3s all ease;
+  transition: .3s all ease; }
+  a, a:hover {
+    text-decoration: none !important; }
+
+.content {
+  position: relative;
+  display: block;
+  padding: 7rem 0;
+  width: 100%;
+  border-radius: 10px;
+}
+
+h2 {
+  font-size: 20px; }
+
+.dropdown-menu li.selected > a.selected {
+  color: #007bff; }
+
+.check-mark {
+  font-size: 12px;
+  margin-top: 2px;
+  color: #007bff;
+  position: relative;
+}
+
+
+
+
+
+
+/*cardlist*/
+
+
+  .card {
+    /* background: url('../img/back/features-background.jpg'); */
+      border-radius: 4px
+  }
+
+  .dots {
+      height: 4px;
+      width: 4px;
+      margin-bottom: 2px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block
+  }
+
+  .badge {
+      padding: 7px;
+      padding-right: 9px;
+      padding-left: 16px;
+      box-shadow: 5px 6px 6px 2px #e9ecef
+  }
+
+  .user-img {
+      margin-top: 4px
+  }
+
+  .check-icon {
+      font-size: 17px;
+      color: #c3bfbf;
+      top: 1px;
+      position: relative;
+      margin-left: 3px
+  }
+
+  .form-check-input {
+      margin-top: 6px;
+      margin-left: -24px !important;
+      cursor: pointer
+  }
+
+  .form-check-input:focus {
+      box-shadow: none
+
+  }
+
+  .icons i {
+      margin-left: 8px
+  }
+
+  .reply {
+      margin-left: 12px
+  }
+
+  .reply small {
+      color: #b7b4b4
+  }
+
+  .reply small:hover {
+      color: green;
+      cursor: pointer
+  }
+
+
+
+
+
+
+ 
+
