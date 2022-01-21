@@ -14,11 +14,6 @@
     <?php
       include_once 'modul.php';
       session_start();
-      // // echo "+******************$$$$$$$$$$$$$*******************************$".isset($_SESSION['user']);
-      // if(! isset($_SESSION['user']))
-      // {
-      //   header("Location: http://localhost/prj/index.php");
-      // }
     ?>
 </head>
 <body>
@@ -150,8 +145,8 @@ button:hover {
 </form>
 
 <script>
-var currentTab = 0; // Current tab is set to be the first tab (0)
-showTab(currentTab); // Display the current tab
+  var currentTab = 0; // Current tab is set to be the first tab (0)
+  showTab(currentTab); // Display the current tab
 
 function showTab(n) {
   // This function will display the specified tab of the form...
@@ -249,7 +244,7 @@ include_once 'modul.php';
                $ag = date('Y')-$ag[0];
 
 
-               if (!empty($_POST["loisir"])) 
+               if (!empty($_POST["loisir"]))
                {
                   $arrayloa = $_POST["loisir"];
                   foreach($arrayloa as $elm){

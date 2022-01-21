@@ -27,19 +27,34 @@
 
       if(isset($_POST['sub']))
       {
-        //create object user from class user and set in session["user"]
+        
+        
         //create function (static) in manage and call to test if existe or not
-        //this is coockie 
-        if(isset($_POST["check"]))
+        $test = Manager::user_test($_POST["user"],$_POST["pass"]);
+        if(empty($test))
         {
-          $userco = $_POST["user"];
-          $passco = $_POST["pass"];
-          setcookie('user',"$userco", time() + (86400 * 30));
-          setcookie('pass',"$passco", time() + (86400 * 30));
-          $gag = $_COOKIE['user'];
-          
-        } 
-        //this is coockie 
+          $user = $_POST["user"];
+          echo "<h1 style='color=red'>$user n'existe pas</h1>";
+        }
+        else
+        { 
+          //create object user from class user and set in session["user"]  
+          $_SESSION["user"] = new user($test);
+          //check if checkboox chcked to create coockie
+            if(isset($_POST["check"]))
+            {
+              //this is coockie 
+
+              $userco = $_POST["user"];
+              $passco = $_POST["pass"];
+              setcookie('user',"$userco", time() + (86400 * 30));
+              setcookie('pass',"$passco", time() + (86400 * 30));
+              $gag = $_COOKIE['user'];
+              //this is coockie 
+            }
+            echo "<script>window.location = 'search.php';</script>";
+        }
+        
       }
 
 

@@ -3,7 +3,7 @@
 
     class user
     {
-        private $tab_info=[];
+        private $tab_info = [];
 
         public function get_user()
         {
@@ -14,10 +14,9 @@
         {
             $this->tab_info = $tab_info;
         }
-
+        
         public function __construct($user)
         {
-
             $this->tab_info=$user;
         }
 

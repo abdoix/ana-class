@@ -27,7 +27,7 @@
   width: 6px;               
 }
 *::-webkit-scrollbar-track {
-  background: transparent;        
+  background: transparent;   
 }
 *::-webkit-scrollbar-thumb {
   background-color: #cacaca;   
@@ -71,17 +71,7 @@
     width: 100%;
     transform: scale(2) translateZ(0);
     filter: blur(15px);
-    background: linear-gradient(
-      to left,
-      #ff5770,
-      #e4428d,
-      #c42da8,
-      #9e16c3,
-      #6501de,
-      #9e16c3,
-      #c42da8,
-      #e4428d,
-      #ff5770
+    background: linear-gradient(to left,#ff5770,#e4428d,#c42da8,#9e16c3,#6501de,#9e16c3,#c42da8,#e4428d,#ff5770
     );
     background-size: 150% 150%;
     animation:inherit;
@@ -158,8 +148,7 @@
 }
   .bad input:focus{
     border:2px solid #df4759 !important;
-  }
-
+}
 </style>
     <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -200,6 +189,8 @@ if(!isset($_SESSION["user"]))
       $newpass = $_POST['passmod'];
       $newemail = $_POST['emailmod'];
       $userobject->set_user([$id,$newuser,$newemail,$newpass,$image,$city,$gender,$age,$hob]);
+      $user = $_SESSION["user"]->get_user();
+      $fin = Manager::user_changeinfo($user[0],$user[1],$user[2],$user[3],$user[4],$user[5],$user[6],$user[7],$user[8]);
     }
     if($_POST['villemod'] != $city || $_POST['emailmod'] != $email || $_POST['agemod'] != $age || $newimage != $image)
     {
@@ -213,6 +204,8 @@ if(!isset($_SESSION["user"]))
         $agenew = $_POST['agemod'];
         $newemail = $_POST['emailmod'];
         $userobject->set_user([$id,$user,$newemail,$pass,$image,$newcity,$gender,$agenew,$hob]);
+        $user = $_SESSION["user"]->get_user();
+        $fin = Manager::user_changeinfo($user[0],$user[1],$user[2],$user[3],$user[4],$user[5],$user[6],$user[7],$user[8]);
     }
     ?>
     <script>
@@ -252,15 +245,20 @@ if(!isset($_SESSION["user"]))
           <div class="moresec p-2" style="display:none;">
             <div class="form-group mx-auto w-75 testhand" id="testhand">
 
-                <input type="text" class="form-control" id="user" name='usrmod' placeholder="Enter new username" required value="<?=$user?>" >
+                <input type="text" class="form-control" id="user" name='usrmod' placeholder="new username" required value="<?=$user?>" >
                 <small></small>
             </div>
             <div class="form-group mx-auto w-75 testpass">
 
-                <input type="password" class="form-control" name ='passmod' id="pass" placeholder="Enter new password" required value="<?=$pass?>">
+                <input type="password" class="form-control pass1" name ='passmod' id="pass" placeholder="new password" required value="<?=$pass?>">
                 <small></small>
 
             </div>
+            <div class="form-group mx-auto w-75">
+              <input type="password" class="form-control pass2"  placeholder="new password again" required value="<?=$pass?>">
+                <small></small>
+            </div>
+            <span class="fas fa-sync-alt float-right p-3" id="rest1"></span>
           </div>
         </div>
 
@@ -274,9 +272,8 @@ if(!isset($_SESSION["user"]))
           <div class="moresec p-2" style="display:none;">
           
             <div class="form-group mx-auto w-75">
-              <div>
-                <input type="text" class="form-control" name ='emailmod' id="" placeholder="Enter new E-mail" required value="<?=$email?>">
-              </div>
+                <input type="text" class="form-control" name ='emailmod' id="email" placeholder="Enter new E-mail" required value="<?=$email?>">
+                <small></small>
             </div>
             <div class="form-group mx-auto w-75">
               <div >
@@ -285,9 +282,10 @@ if(!isset($_SESSION["user"]))
             </div>
             <div class="form-group mx-auto w-75">
               <div>
-                <input type="text" class="form-control" name ='agemod' id="age" placeholder="Enter new age" required value="<?=$age?>">
+                <input type="number" class="form-control" min=0 max=150  name ='agemod' id="age" placeholder="Enter new age" required value="<?=$age?>">
               </div>
             </div>
+            <span class="fas fa-sync-alt float-right p-3" id="rest2"></span>
           </div>
         </div>
           <button type="submit" class="btn btn-default btn-primary" name="submod" id="save">Save changes</button>
@@ -355,39 +353,30 @@ if(!isset($_SESSION["user"]))
   <div class="container form-cont text-left">
     <div class="row justify-content-center">
       <div class="col-md-5">
-      <form class="d-flex flex-column" action='search.php' method='POST' id="search-form" >
-      <div class="d-flex flex-row " style='gap:1rem;'>
+      <form class="d-flex flex-column" id="search-form" >
+        <div class="d-flex flex-row" style='gap:1rem;'>
       
-      <select id='gate' class="selectpicker form-control shadow my-auto" multiple data-max-options="4" required name='ville[]' >
-
-          <?php
-          $villearray = Manager::get_ville_all();
-          if(!empty($villearray))
-          {
-            while ($row = $villearray->fetch()) {
-              $city = $row["city"];
-              $varupperletter = ucfirst($city);
-              echo "<option value=$city>$varupperletter</option>";
+          <select id='gate' class="selectpicker form-control shadow my-auto" multiple data-max-options="4" required name='ville[]' >
+            <option value="all">All</option>;
+            <?php
+            $villearray = Manager::get_ville_all();
+            if(!empty($villearray))
+            {
+              while ($row = $villearray->fetch()){
+                $city = $row["city"];
+                $varupperletter = ucfirst($city);
+                echo "<option value=$city >$varupperletter</option>";
+              }
+              $villearray->closeCursor();
             }
-            $villearray->closeCursor();
-          }
-          ?>
+            ?>
 
-        </select>
+          </select>
         
-      <!-- <input type='text' id="search-field"> -->
-      <button  type="button" class="box" id="search-speech"  disabled>
-        <i class="fas fa-microphone-alt text-secondary" id='spchicon'></i>
-      </button></div>
-      <div class='d-flex flex-row my-4 justify-content-between w-100'>
-
-      <input class="btn btn-primary form-control w-50 " type='submit' name='sub' value='submit' id='sub'>
-      <a href="search.php?display=all" class='text-white btn btn-warning form-control w-25 mx-auto '>All</a>
-      
-    
-    
-    </div>
-
+          <button  type="button" class="box" id="search-speech" disabled>
+            <i class="fas fa-microphone-alt text-secondary" id='spchicon'></i>
+          </button>
+        </div>
       </form>
 
       </div>
@@ -397,159 +386,7 @@ if(!isset($_SESSION["user"]))
 
 
 <div class="container my-4" style='border-radius: 10px;background:trapsarent'>
-    <div class="d-flex flex-row flex-wrap " style="gap:2%;">
-            <?php
-                    if(!empty($_POST['ville']))
-                    {
-                      $cmp =1; 
-                      $cmpaccord =1;  
-                      // echo $_POST['ville'];
-                        $villesearch = $_POST['ville'];
-                        
-                        foreach($villesearch as $selectedOption)
-                        {
-                          $resultcity = manager::get_ville($selectedOption);
-                          if(!empty($resultcity))
-                          {                            
-                            while($myarray = $resultcity->fetch())
-                            {
-                                // echo $myarray[0];
-                                // echo $myarray[1];
-                                // echo "<br>";
-                            echo "<div class='border p-2 mb-3 bg-white' style='border-radius:10px;width:49%;'><div class='headings d-flex justify-content-center align-items-center mb-3'><h6>The result of <span class='font-weight-bold text-danger'>$selectedOption </span>City</h6></div>";
-                            echo "<div id='accord$cmpaccord' class='d-flex flex-column w-100' style='gap:1rem;overflow:auto;height:300px;'>";
-                              echo "<div class='card mx-auto p-3 w-75 shadow '>
-                                  <div id='heading$cmp' class='card-header d-flex justify-content-between align-items-center w-100 h-100'>
-                                      <div class='user d-flex flex-row align-items-center'>
-                                        <img src='img/users/$myarray[photo]' width='50' height='50' class='user-img rounded-circle mr-3'>
-                                        <span>
-                                          <small class='font-weight-bold text-primary'>@$myarray[handler]</small>
-                                          <small class='font-weight-bold text-secondary'>From</small>
-                                          <small class='font-weight-bold text-dark'>$myarray[city]</small>
-
-                                          
-                                        </span>
-                                      </div>
-                                      <small>
-                                      <button class='btn btn-link collapsed hover-text-info'  data-toggle='collapse' data-target='#collapse$cmp' aria-expanded='true' aria-controls='collapse$cmp'>
-                                      <i class='fas fa-align-right'></i>
-                                      </button>
-                                    </small>
-                                  </div>
-                                  <div id='collapse$cmp' class='collapse' style='transition: 1s;' aria-labelledby='heading$cmp' data-parent='#accord$cmpaccord'>
-                                    <div class='card-body table-responsive'>
-                                    <table class='table table-sm text-center'>
-                                    <thead>
-                                      <tr>
-                                        <th scope='col'>name</th>
-                                        <td>$myarray[handler]</td>
-                                      </tr>
-                                      <tr>
-                                      <th scope='col'>age</th>
-                                      <td>$myarray[age]</td>
-                                      </tr>
-                                      <tr>
-                                      <th scope='col'>City</th>
-                                      <td>$myarray[city]</td>
-                                      </tr>
-                                      <tr>
-                                      <th scope='col'>gender</th>
-                                      <td>$myarray[gender]</td>
-                                      </tr>
-                                      <tr>
-                                      <th scope='col'>hobbies</th>
-                                      <td>$myarray[hobbies]</td>
-                                      </tr>
-                                    </thead>
-                                  </table>
-                                    </div>
-                                  </div>
-                              </div>";
-                              $cmp++;
-                            }
-                            $resultcity->closeCursor();
-                          }
-                          echo'</div></div>';
-                          $cmpaccord++;
-                        }
-                    }
-                        // echo testread($_POST['user'],$_POST['pass']);
-                  
-                    if(!empty($_GET['display']))
-                    {
-                      $cmp =1; 
-                      $cmpaccord =1;  
-                      // echo $_POST['ville'];
-                      $villesearch = Manager::get_ville_all();
-                      while ($selectedOption = $villesearch->fetch())
-                      {
-                        $resultcity = manager::get_ville($selectedOption[0]);
-                        if(!empty($resultcity))
-                        {                            
-                          while($myarray = $resultcity->fetch())
-                          {
-                              // echo $myarray[0];
-                              // echo $myarray[1];
-                              // echo "<br>";
-                          echo "<div class='border p-2 mb-3 bg-white' style='border-radius:10px;width:49%;'><div class='headings d-flex justify-content-center align-items-center mb-3'><h6>The result of <span class='font-weight-bold text-danger'>$selectedOption[0] </span>City</h6></div>";
-                          echo "<div id='accord$cmpaccord' class='d-flex flex-column w-100' style='gap:1rem;overflow:auto;height:300px;'>";
-                            echo "<div class='card mx-auto p-3 w-75 shadow '>
-                                <div id='heading$cmp' class='card-header d-flex justify-content-between align-items-center w-100 h-100'>
-                                    <div class='user d-flex flex-row align-items-center'>
-                                      <img src='img/users/$myarray[photo]' width='50' height='50' class='user-img rounded-circle mr-3'>
-                                      <span>
-                                        <small class='font-weight-bold text-primary'>@$myarray[handler]</small>
-                                        <small class='font-weight-bold text-secondary'>From</small>
-                                        <small class='font-weight-bold text-dark'>$myarray[city]</small>
-                                      </span>
-                                    </div>
-                                    <small>
-                                    <button class='btn btn-link collapsed hover-text-info'  data-toggle='collapse' data-target='#collapse$cmp' aria-expanded='true' aria-controls='collapse$cmp'>
-                                    <i class='fas fa-align-right'></i>
-                                    </button>
-                                  </small>
-                                </div>
-                                <div id='collapse$cmp' class='collapse' style='transition: 1s;' aria-labelledby='heading$cmp' data-parent='#accord$cmpaccord'>
-                                  <div class='card-body table-responsive'>
-                                  <table class='table table-sm text-center'>
-                                  <thead>
-                                    <tr>
-                                      <th scope='col'>name</th>
-                                      <td>$myarray[handler]</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope='col'>age</th>
-                                    <td>$myarray[age]</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope='col'>City</th>
-                                    <td>$myarray[city]</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope='col'>gender</th>
-                                    <td>$myarray[gender]</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope='col'>hobbies</th>
-                                    <td>$myarray[hobbies]</td>
-                                    </tr>
-                                  </thead>
-                                </table>
-                                  </div>
-                                </div>
-                            </div>";
-                            $cmp++;
-                          }
-                          $resultcity->closeCursor();
-                        }
-                        echo'</div></div>';
-                        $cmpaccord++;
-                      }
-
-
-                    }
-            ?>
-
+    <div class="d-flex flex-row flex-wrap res" style="gap:2%;">
     </div>
 </div>
 </div>
@@ -621,6 +458,17 @@ if(!isset($_SESSION["user"]))
         // OR RUN AN AJAX/FETCH SEARCH
         voice.stop();
         voice.sbtn.classList.remove('effectactive');
+
+
+        var citys = $("#gate").val();
+        $.post("affusers.php",{ville:citys},function(data){
+          // console.log(data);
+          $(".res").html(data);
+        })
+
+
+
+
       };
 
       // (A5) ON SPEECH RECOGNITION ERROR
@@ -682,15 +530,101 @@ window.addEventListener('DOMContentLoaded', voice.init);
 
 
     $(function(){
+
+
+      var emailreg =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      var email = $('#email').val();
+
       var usershand = <?php echo json_encode(Manager::get_all_h())?>;
       var userspass = <?php echo json_encode(Manager::get_all_p())?>;
+
+
+      //test email validation
+      $('#email').on('input',(function(){
+        email = $('#email').val();
+        if(email.match(emailreg) ){
+         console.log('Enter valid email');
+          $(this).parent().removeClass('bad');
+          $(this).parent().addClass('good'); 
+          $(this).next().html('Good');
+          $("#save").attr("disabled", false);   
+        }
+        else{
+          console.log('not good');
+          $(this).parent().removeClass('good');
+          $(this).parent().addClass('bad'); 
+          $(this).next().html('example@example.com/net/org/co/...');
+          $("#save").attr("disabled", true);
+        }
+      }))
+      //test pass recop..
+      $(".pass2").on('input',(function(){
+        if($(".pass1").val() == $(".pass2").val())
+        {
+          $(this).parent().removeClass('bad');
+          $(this).parent().addClass('good'); 
+          $(this).next().html('');
+          $("#save").attr("disabled", false);
+        }
+        else{
+          $(this).parent().removeClass('good');
+          $(this).parent().addClass('bad'); 
+          $(this).next().html('It\'s not the same');
+          $("#save").attr("disabled", true);
+        }
+      }))
+
+      //rest data
+      $("#rest1").click(function(){
+        $("#user").val("<?=$user?>");
+        $(".pass1").val("<?=$pass?>");
+        $(".pass2").val("<?=$pass?>");
+        $(".testhand").removeClass("good");
+        $(".testhand").removeClass("bad");
+        $(".testhand").find("small").html("");
+
+        $(".testpass").removeClass("good");
+        $(".testpass").removeClass("bad");
+        $(".testpass").find("small").html("");
+
+
+        $(".pass2").parent().removeClass("good");
+        $(".pass2").parent().removeClass("bad");
+        $(".pass2").next().html("");
+
+        $("#save").attr("disabled", false);
+
+
+      })
+
+      $("#rest2").click(function(){
+
+
+        $("#email").val("<?=$email?>");
+        $("#ville").val("<?=$city?>");
+        $("#age").val("<?=$age?>");
+
+
+        $("#email").parent().removeClass("good");
+        $("#email").parent().removeClass("bad");
+        $("#email").next().html("");
+
+
+        $("#save").attr("disabled", false);
+
+      })
+      
+
+      //test handler and pass
+
       $(".more").click(function(){
         $(".more").removeClass("act");
         $(this).addClass("act");
         $(".more:not(.act)").parent("div").next().slideUp(1000);
         $(this).parent("div").next().slideToggle(1000);
       })
-      $('.testhand input').on('input',(function(){
+      $('.testhand input').on('input',(function()
+      {
         if($(this).val() != "<?=$user?>" )
         {
           if(usershand.includes($(this).val()))
@@ -710,7 +644,8 @@ window.addEventListener('DOMContentLoaded', voice.init);
             $("#pass").attr("disabled", false);
           }
         }
-        else{
+        else
+        {
           $(this).parent().removeClass('good');
           $(this).parent().removeClass('bad');
           $(this).next().html('');
@@ -722,10 +657,29 @@ window.addEventListener('DOMContentLoaded', voice.init);
       $('.testpass input').on('input',(function(){
         if($(this).val() != "" && $(this).val() != "<?=$pass?>")
         {
-
               $(this).parent().removeClass('bad');
               $(this).parent().addClass('good');
               $(this).next().html('Good');
+
+              $(".pass2").parent().removeClass('good');
+              $(".pass2").parent().addClass('bad'); 
+              $(".pass2").next().html('It\'s not the same');
+              $("#save").attr("disabled", true);
+
+
+            if($(".pass1").val() == $(".pass2").val())
+            {
+              $(".pass2").parent().removeClass('good');
+              $(".pass2").parent().removeClass('bad');
+              $(".pass2").next().html('');
+              $("#save").attr("disabled", false);
+            }
+            else{
+              $(".pass2").parent().removeClass('good');
+              $(".pass2").parent().addClass('bad'); 
+              $(".pass2").next().html('It\'s not the same');
+              $("#save").attr("disabled", true);
+            }
               // $("#save").attr("disabled", true);  
 
           // else{
@@ -739,9 +693,111 @@ window.addEventListener('DOMContentLoaded', voice.init);
           $(this).parent().removeClass('good');
           $(this).parent().removeClass('bad');
           $(this).next().html('');
+
+
+          // $("#save").attr("disabled", true);
+          if($(".pass1").val() == $(".pass2").val())
+          {
+            $(".pass2").parent().removeClass('good');
+            $(".pass2").parent().removeClass('bad');
+            $(".pass2").next().html('');
+            $("#save").attr("disabled", false);
+          }
+          else{
+            $(".pass2").parent().removeClass('good');
+            $(".pass2").parent().addClass('bad'); 
+            $(".pass2").next().html('It\'s not the same');
+            $("#save").attr("disabled", true);
+          }
         }
 
       }))
+
+
+
+
+
+
+
+
+
+    $("#gate").change(function(){
+      // $("option").each(function(){
+      //   prop( "disabled", false);
+      // })
+      // $("ul.inner li").each(function(indx){
+      //     $(this).removeClass("disabled");
+      // })
+      // $("#search-speech").click(function(){
+
+      // })
+
+      if($("#gate").val() != "")
+      {
+        // console.log("is not empty");
+        if($('#gate').val() == "all"){
+        $("ul.inner li").each(function(indx){
+              if(indx != 0)
+              {
+                $(this).addClass("disabled");
+              }
+              
+        })
+        $('#gate option').each(function() {
+          if($(this).val() != "all")
+          {
+            // console.log($(this).val());
+            // $(this).attr('disabled','disabled');
+            $(this).prop( "disabled", true );
+          }
+        })
+
+      }
+      else
+      {
+        $("option[value='all']").prop( "disabled", true);
+        $("ul.inner li").each(function(indx){
+          if(indx != 0) $(this).removeClass("disabled");
+          else $(this).addClass("disabled");
+        })
+        $('#gate option').each(function() {
+          if($(this).val() != "all") $(this).prop( "disabled", false );
+        })
+      }
+      var citys = $("#gate").val();
+      $.post("affusers.php",{ville:citys},function(data){
+        // console.log(data);
+        $(".res").html(data);
+      })
+      }
+      else
+      {
+        $('#gate option').each(function() {
+          $(this).prop( "disabled", false );
+        })
+        $("ul.inner li").each(function(indx){
+          $(this).removeClass("disabled");
+        })
+      }
+
+
+
+
+
+      // $.ajax({
+      //     type: "POST",
+      //     url: "affusers.php",
+      //     data: `ville = ${citys}`
+      // }).done(function(res){
+      //   $(".res").html)(res);
+      // });
+    })
+
+
+
+
+
+
 
     })
   </script>

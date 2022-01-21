@@ -12,6 +12,7 @@
             // }
             return $resultmod;
         }
+
         public static  function get_all()
         {
             return DBCONECT::pdo_select("select users.id,handler,email,photo,city,gender,age,hobbies from users,userinfo ");
@@ -62,10 +63,13 @@
         {
             return DBCONECT::pdo_select("select users.id,handler,email,photo,city,gender,age,hobbies from users,userinfo where users.id = userinfo.id and userinfo.city = '$ville'");
         }
-        public static function user_test($handler)
+
+
+
+        public static function user_test($handler,$pass)
         {
             
-            $result = DBCONECT::pdo_select("select users.id,handler,email,pass,photo,city,gender,age,hobbies from users,userinfo where users.id = userinfo.id and users.handler = '$handler'");
+            $result = DBCONECT::pdo_select("select users.id,handler,email,pass,photo,city,gender,age,hobbies from users,userinfo where users.id = userinfo.id and users.handler = '$handler' and users.pass = '$pass'");
             $userarray = "";
             if(!empty($result))
             {
@@ -77,6 +81,8 @@
             }
             return $userarray;
         }
+
+
         public static  function user_changeinfo($id,$user,$email,$pass,$image,$city,$gender,$age,$hob)
         {
             DBCONECT::pdo_change("update userinfo u,users s set handler ='$user',email ='$email',pass='$pass',photo='$image',city='$city',gender='$gender',age='$age',hobbies='$hob' where u.id= '$id' and u.id= s.id");
