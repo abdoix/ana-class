@@ -16,6 +16,7 @@
       include_once "manage.php";
 
       session_start();
+      // session_destroy();
       $usercookie='';
       $passcookie='';
       //coockietest
@@ -39,12 +40,11 @@
         else
         { 
           //create object user from class user and set in session["user"]  
-          $_SESSION["user"] = new user($test);
+          $_SESSION["user"] = $test;
           //check if checkboox chcked to create coockie
             if(isset($_POST["check"]))
             {
               //this is coockie 
-
               $userco = $_POST["user"];
               $passco = $_POST["pass"];
               setcookie('user',"$userco", time() + (86400 * 30));

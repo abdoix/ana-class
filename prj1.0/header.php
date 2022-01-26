@@ -96,6 +96,9 @@
 
     </style>
 <?php
+      // if(!empty($_POST['load'])){
+      //   session_start();
+      // }
         $id = "";
         $user = "";
         $email= "";
@@ -105,11 +108,11 @@
         $gender = "";
         $age = "";
         $hob = "";
+
         include_once 'user.php';
         if(!empty($_SESSION["user"]))
         {
-          $userobject = $_SESSION["user"];
-          $userarray = $userobject->get_user();
+          $userarray = $_SESSION["user"];
           $id = $userarray[0];
           $user = $userarray[1];
           $email = $userarray[2];
@@ -150,7 +153,7 @@
 
 
 
-    <div class="row align-items-center g-5 " style="position: relative;">
+  <div class="row align-items-center g-5 " style="position: relative;">
 
       <nav class='fixed-top mainnav'>
         <div class="logo">
@@ -165,43 +168,41 @@
       <li class="d-inline-block" > 
         <div class="dropdown custom-dropdown ">
           <a href="#" data-toggle="dropdown" style="position: relative !important" class="d-flex d-inline-block align-items-center dropdown-link text-left" aria-haspopup="true" aria-expanded="false" data-offset="0, 20" >
-          <div class="profile-pic mr-2">
+          <div class="profile-pic mr-2" id="nav-img">
           <?php
-
-          if(!empty($_SESSION['user']))
-          {
-
-            echo "<img src='img/users/$image' alt='Image' width='40' height='40' class='user-img rounded-circle my-auto'>";
-          }
+            if(!empty($_SESSION['user']))
+            {
+              echo "<img src='img/users/$image' alt='Image' width='40' height='40' class='user-img rounded-circle my-auto' id='nav-img'>";
+            }
           ?>
           </div>
           </a>
-      <div class="dropdown-menu px-0 pl-0" aria-labelledby="dropdownMenuButton" style="position: relative !important;margin-top:-12px !important;margin-right:30px;">
-        <ul class="px-4">
-          <li class="px-0">
-            <div class="d-flex align-items-center">
+          <div class="dropdown-menu px-0 pl-0" aria-labelledby="dropdownMenuButton" style="position: relative !important;margin-top:-12px !important;margin-right:30px;">
+            <ul class="px-4">
+              <li class="px-0">
+                <div class="d-flex align-items-center">
               
-              <div class="avatar pr-2">
-                <img class="avatar-img rounded-circle shadow" src="img/users/<?=$image?>"; alt="avatar" width='40' height='40' class="user-img rounded-circle">
-              </div>
-              <div>
-                <a class="h6" href="#">@<?=$user?></a>
-                <p class="small m-0"><?=$email?></p>
-              </div>
-            </div>
-            <hr>
-          </li>
-        <li class="py-1">
-          <a class="dropdown-item line pl-1" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user-edit px-1"></i>Edit Profile</a>
-        </li>
+                <div class="avatar pr-2">
+                  <img class="avatar-img rounded-circle shadow" src="img/users/<?=$image?>"; alt="avatar" width='40' height='40' class="user-img rounded-circle">
+                </div>
+                <div>
+                  <a class="h6" href="#">@<?=$user?></a>
+                  <p class="small m-0"><?=$email?></p>
+                </div>
+                </div>
+              </li>
+              <li class="py-1">
+                <a class="dropdown-item line pl-1" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-user-edit px-1"></i>Edit Profile</a>
+              </li>
           
-          <li class="py-1 "><a class="dropdown-item pl-1" href="#"><i class="fas fa-question-circle px-1"></i>Help</a></li>
-          <li class="py-1"><a class="dropdown-item pl-1" href="#"><i class="fas fa-cog px-1"></i>Setting<span>New</span></a></li>
-          <li class="py-1"><a class="dropdown-item pl-1" href="logout.php"><i class="fas fa-sign-out-alt px-1"></i>Log out</a></li>
-        </ul>
-      </div>
-      </div></li>
-        </ul>
+              <li class="py-1 "><a class="dropdown-item pl-1" href="#"><i class="fas fa-question-circle px-1"></i>Help</a></li>
+              <li class="py-1"><a class="dropdown-item pl-1" href="#"><i class="fas fa-cog px-1"></i>Setting <small class="badge badge-primary">new</small></a></li>
+              <li class="py-1"><a class="dropdown-item pl-1" href="logout.php"><i class="fas fa-sign-out-alt px-1"></i>Log out</a></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    </ul>
     </nav> 
 
 
@@ -221,7 +222,8 @@
 				</figure>
 				<!-- Title -->
 				<h1 class="mb-0 display-6">Limitless learning at your
-					<span class="position-relative">fingertips
+					<span class="position-relative">
+            fingertips
 						<!-- SVG START -->
             <span class="position-absolute top-50 start-50 translate-middle ms-3 z-index-n1" style="z-index: -999;">
               <svg fill="#FFCC00" width="300px" height="62.1px" enable-background="new 0 0 366 62.1" viewBox="0 0 366 62.1" xmlns="http://www.w3.org/2000/svg">
@@ -313,13 +315,20 @@
 
         
 
-    <!-- <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-select.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <?php
+
+
+    
+    ?>
+
 
 
 
 
     <!-- <script src="js/main.js"></script> -->
+ 

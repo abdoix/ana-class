@@ -37,6 +37,8 @@
         }
 
 
+        
+
 
         public static  function get_all_p()
         {
@@ -55,10 +57,14 @@
         }
 
 
+
+
+
         public static  function get_ville_all()
         {
             return DBCONECT::pdo_select("select DISTINCT(city) from userinfo");
         }
+        
         public static function get_ville($ville)
         {
             return DBCONECT::pdo_select("select users.id,handler,email,photo,city,gender,age,hobbies from users,userinfo where users.id = userinfo.id and userinfo.city = '$ville'");
