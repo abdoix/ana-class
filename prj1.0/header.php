@@ -153,7 +153,7 @@
 
 
 
-  <div class="row align-items-center g-5 " style="position: relative;">
+  <div class="row align-items-center g-5 " style="position: relative;background:#fff !important;">
 
       <nav class='fixed-top mainnav'>
         <div class="logo">

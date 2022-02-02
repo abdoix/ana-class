@@ -10,6 +10,7 @@
     position: relative;
     box-sizing: border-box;
     overflow-x:hidden;
+    background:#fff !important;
   }
 * {
   box-sizing: border-box;
@@ -41,53 +42,45 @@
 }
 .box {
   background: hsl(0, 0%, 100%);
-  width:50px;
-  height:50px;
+  width:40px;
+  height:40px;
   outline: none !important;
   border:none !important;
-  padding: 16px 16px;
+  /* padding: 16px 16px; */
   position: relative;
   border-radius: 50px;
   box-shadow: 0 0 0 0px rgba(0,0,0,.01);
   /* z-index: 999; */
+  /* transicion:1s; */
+  box-shadow:0px 0px 0px 0px #f0f0f0;
 }
-.bootstrap-select .dropdown-toggle:focus, .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
-    outline: none !important;
-    outline: none !important;
-    outline-offset: none;
-}
-.dropdown-toggle:focus-visible {
-    outline:none !important;
-}
-.box:focus {
-    outline: none !important;
-}
-  .box::after {
+
+  /* .box::after {
     position: absolute;
     content: "";
     left: 0;
     right: 0;
-    height: 100%;
-    width: 100%;
+    height: 40%;
+    width: 40%;
     transform: scale(2) translateZ(0);
     filter: blur(15px);
     background: linear-gradient(to left,#ff5770,#e4428d,#c42da8,#9e16c3,#6501de,#9e16c3,#c42da8,#e4428d,#ff5770
     );
-    background-size: 150% 150%;
+    background-size: 10% 10%;
     animation:inherit;
     z-index: -1;
-  }
+  } */
   .effectactive{
     animation: animateGlow 1.25s linear infinite;
   }
+  
   .content {
+    position:relative;
+    box-sizing: border-box;
     max-width:100%;
-    background:url('img/back/features-background.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 1;
-}
+    background : transparent;
+    z-index:none;
+  }
 .form-cont{
   z-index:9;
 }
@@ -106,16 +99,20 @@
 
 @keyframes animateGlow {
   0% {
-    background-position: 0% 50%;
+    box-shadow:0px 0px 0px 0px #f0f0f0;
   }
   100% {
-    background-position: 200% 50%;
+    box-shadow:0px 0px 0px 8px #f0f0f0;
   }
 }
 #err,#sec
 {
   visibility: hidden;
   z-index: 10;
+}
+#err .fas,#sec .fas
+{
+  cursor:pointer;
 }
 .err,.sec
 {
@@ -170,6 +167,7 @@
 
 include_once 'modul.php';
 include_once 'manage.php';
+include_once 'classprd.php';
 include_once 'user.php';
 // session_destroy();
 session_start();
@@ -226,6 +224,7 @@ if(!empty($_POST["submod"]))
   }
 }
 ?>
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -277,7 +276,7 @@ if(!empty($_POST["submod"]))
       </div>
 
       <div class="form-group mx-auto w-75" style="border:1px solid #f0f0f0;min-height:50px;">
-      <div class='p-2 font-weight-bold border-primary' style='border-bottom: 2px solid;background:#f0f0f0;'>
+        <div class='p-2 font-weight-bold border-primary' style='border-bottom: 2px solid;background:#f0f0f0;'>
           <span>General info</span>
           <span class="more fas fa-arrow-circle-down float-right p-3" ></span>
           <br/>
@@ -296,7 +295,7 @@ if(!empty($_POST["submod"]))
           </div>
           <div class="form-group mx-auto w-75">
             <div>
-              <input type="number" class="form-control" min=0 max=150  name ='agemod' id="age" placeholder="Enter new age" required value="<?=$age?>">
+              <input type="number" class="form-control" min=1 max=150 name ='agemod' id="age" placeholder="Enter new age" required value="<?=$age?>">
             </div>
           </div>
           <span class="fas fa-sync-alt float-right p-3" id="rest2"></span>
@@ -304,13 +303,121 @@ if(!empty($_POST["submod"]))
       </div>
         <button type="button" class="btn btn-default btn-primary" name="submod" id="save">Save changes</button>
       </form>
+      <div id='sec' class="alert alert-light fixed-bottom d-flex mx-auto align-items-center justify-content-between" role="alert">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-thumbs-up text-success display-8 pr-3"></i>
+            <div class="cont"></div>
+          </div>
+          <span class="fas fa-times"></span>
+        </div>
     </div>
   </div>
   </div>
 </div>
 
 
-<section class="py-0 py-xl-5">
+
+<!--- modal search --->
+
+
+<div id="search" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="w-100 border-bottom p-0 m-0">
+            <div class="d-flex flex-row" style='gap:1rem;'>
+      
+              <select id='gate' class="selectpicker form-control  my-auto border" multiple data-max-options="4" required name='ville[]' >
+
+              </select>
+        
+              <button type="button" class="box" id="search-speech" disabled>
+                <i class="fas fa-microphone-alt text-secondary" id='spchicon'></i>
+              </button>
+              <button type="button" class="close " data-dismiss="modal" aria-label="Close" id="voicestop">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="container my-2" style='border-radius: 10px;overflow : auto;max-height:400px;'>
+          <div class="d-flex flex-column res" style="gap:1rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--- modal search --->
+
+
+
+
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div> -->
+      <div class="modal-body">
+        <div id="products" class="container mt-2 mb-2 text-center" style="max-height:450px;overflow-x:auto;">
+        
+        </div>
+        <div id="payment" style="display:none;" class="card ">
+          <div class="card-title mx-auto"> Settings </div>
+          <div class="nav">
+            <ul class="mx-auto">
+              <li class="active"><a href="#">Payment</a></li>
+            </ul>
+          </div>
+          <form> <span id="card-header">Saved cards:</span>
+            <div class="row row-1">
+              <div class="col-2"><img class="img-fluid" src="https://img.icons8.com/color/48/000000/mastercard-logo.png" /></div>
+              <div class="col-7"> <input type="text" placeholder="**** **** **** 3193"> </div>
+              <div class="col-3 d-flex justify-content-center"> <a href="#">Remove card</a> </div>
+            </div>
+            <div class="row row-1">
+              <div class="col-2"><img class="img-fluid" src="https://img.icons8.com/color/48/000000/visa.png" /></div>
+              <div class="col-7"> <input type="text" placeholder="**** **** **** 4296"> </div>
+              <div class="col-3 d-flex justify-content-center"> <a href="#">Remove card</a> </div>
+            </div> <span id="card-header">Add new card:</span>
+            <div class="row-1">
+              <div class="row row-2"> <span id="card-inner">Card holder name</span> </div>
+              <div class="row row-2"> <input type="text" placeholder="Bojan Viner"> </div>
+            </div>
+            <div class="row three">
+            <div class="col-7">
+                <div class="row-1">
+                    <div class="row row-2"> <span id="card-inner">Card number</span> </div>
+                    <div class="row row-2"> <input type="text" placeholder="5134-5264-4"> </div>
+                </div>
+            </div>
+            <div class="col-2"> <input type="text" placeholder="Exp. date"> </div>
+            <div class="col-2"> <input type="text" placeholder="CVV"> </div>
+              </div> <button class="subcard btn d-flex mx-auto"><b>Add card</b></button>
+          </form>
+        </div>
+
+
+
+
+      </div>
+      <div class="modal-footer d-flex flex-row justify-content-between">
+        <h3 id="total"></h3>
+        <button type="button" class="np btn btn-success" value="payment">payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<section class="py-0 py-xl-5 my-5" style="background:url('img/back/invitation-background.jpg');">
 	<div class="container">
 		<div class="d-felx flex-row justify-content-around row g-4 kiki">
 			<!-- Counter item -->
@@ -361,41 +468,73 @@ if(!empty($_POST["submod"]))
 
 
 
-<div class="content shadow my-5">
-  <div class="w-50 text-center mx-auto my-2 text-white">  
+<div class="content d-flex my-2 px-2">
+  <!-- <div class="w-50 text-center mx-auto my-2 text-white">  
       <h2 class = "h2-heading">Online service features</h2>
       <p class = "p-heading text-white">Suspendisse vitae enim arcu. Aliquam convallis risus a felis blandit, at mollis nisi bibendum. Aliquam nec purus at ex blandit posuere nec a odio. Proin lacinia dolor justo</p>
-  </div>
-  <div class="container form-cont text-left" id="self">
-    <div class="row justify-content-center" id="selfchild">
-      <div class="col-md-5">
-        <form class="d-flex flex-column" id="search-form" >
-          <div class="d-flex flex-row" style='gap:1rem;'>
-      
-            <select id='gate' class="selectpicker form-control shadow my-auto" multiple data-max-options="4" required name='ville[]' >
-            
-            </select>
-        
-            <button  type="button" class="box" id="search-speech" disabled>
-              <i class="fas fa-microphone-alt text-secondary" id='spchicon'></i>
-            </button>
-          </div>
-        </form>
+  </div> -->
+  
+
+  <div  style="width:100%;margin:0 auto;">
+    <div class="w-100 border-bottom d-flex justify-content-between pr-2" style="height:51px;">
+      <nav style="line-height:50px;">
+        <ul class="cat d-flex justify-content-start align-items-end" style="gap:1rem;">
+          <li class="active"><a v="0' or '1' = '1" >All</a></li>
+          <li><a v="2" >web devlopment</a></li>
+          <li><a v="1" >python</a></li>
+        </ul>
+      </nav>
+      <div class="d-flex justify-content-around" style="line-height:51px;gap:1rem">      
+      <select class="order custom-select custom-select-sm my-auto" style="width:75px;">
+        <option value="price">price</option>
+        <option value="name">title</option>
+        <option value="stars">stars</option>
+      </select>
+      <a class="my-auto h-6" data-toggle="modal" data-target="#exampleModalLong"><i class="fa fa-shopping-cart my-auto"></i><small id="badge" class="badge bg-danger"><?php echo count($_SESSION["panier"]->get_tab_prd());?></small></a>
+      <a class="my-auto h-6" data-toggle="modal" data-target="#search"><i class="fas fa-search my-auto"></i></a>
       </div>
+      <!--<div class="dropdown" style="line-height:50px;">
+       <button class="btn p-0 dropdown-toggle" style="background-color: rgb(240, 246, 255) !important;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        sortd by</button>
+        <div class="order dropdown-menu p-0 d-flex flex-column justify-content-start align-items-center">
+          <a class="sortact p-0" v="price">price</a>
+          <a class="p-0" v="name">title</a>
+          <a class="p-0 h-auto" v="">stars</a>
+        </div>
+      </div> -->
     </div>
+    <div class="rescard" style="padding:50px 200px;">
+      
+    
+      <!-- <div class="card text-left" style="height:300px;">
+          <img class="card-img-top" width="100%" height="100px" src="img/card/python/finance.jpg" alt="">                  
+          <div class="card-body" style="height:150px;">
+            <h4 class="card-title">Australie</h4>
+            <p class="card-text my-0"> The Best Australian Beach You’ve Never Been To </p>
+            <a class="text-secondary display-8"><small><i class="fa fa-star text-dark" aria-hidden="true"></i><i class="fa fa-star text-dark" aria-hidden="true"></i><i class="fa fa-star d-5 text-dark" aria-hidden="true"></i><i class="fa fa-star d-5 text-dark" aria-hidden="true"></i><i class="fa fa-star d-5 text-outline-primary" aria-hidden="true"></i></small></a>
+            <a class="text-secondary font-weight-normal"><small>vues 350</small></a>
+          </div>
+          <div class="card-footer d-flex flex-row justify-content-between align-items-center" style="height:50px;">
+          <span>$12.00 <small class="text-secondary">(<s>$20.19</s>)</small></span>
+          <button type="button" class="btn btn-outline-primary py-1" data-mdb-ripple-color="dark">add to card</button>
+          </div>
+      </div> -->
+      
+    </div>
+    
   </div>
 
-  <div class="container my-4" style='border-radius: 10px;background:trapsarent'>
-    <div class="d-flex flex-row flex-wrap res" style="gap:2%;">
-    </div>
-  </div>
+
+
 </div>
 
 
 
 
-
-<div id='err' class="alert alert-light fixed-bottom d-flex mx-auto align-items-center justify-content-between" role="alert">
+<?php
+    include_once "fotter.html";
+?>
+<!-- <div id='err' class="alert alert-light fixed-bottom d-flex mx-auto align-items-center justify-content-between" role="alert">
   <div class="d-flex align-items-center">
     <i class="fas fa-exclamation-triangle text-danger display-8 pr-3"></i>
     <div class="cont"></div>
@@ -404,18 +543,12 @@ if(!empty($_POST["submod"]))
 </div>
 
 
-<div id='sec' class="alert alert-light fixed-bottom d-flex mx-auto align-items-center justify-content-between" role="alert">
-  
 
-  <div class="d-flex align-items-center">
-    <i class="fas fa-thumbs-up text-danger display-8 pr-3"></i>
-    <div class="cont"></div>
-  </div>
-  <span class="fas fa-times"></span>
+<div style='position:relative; height:200px; width:100%;'>
 </div>
-<?php
-    include_once "fotter.html";
-?>
+
+
+
 <!-- <link rel="stylesheet" href="fonts/icomoon/style.css"> -->
 
 <link rel="stylesheet" href="css/bootstrap-select.min.css">
@@ -427,6 +560,294 @@ if(!empty($_POST["submod"]))
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/bootstrap-select.min.js"></script>
+  <style>
+    .bootstrap-select .dropdown-toggle:focus, .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {outline-offset: none !important;}
+    .bootstrap-select .dropdown-toggle:focus, .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+      outline:  none !important;
+      outline:  none !important;
+      outline-offset:  none !important;
+
+    }
+    .cat li a{
+      text-decoration:none;
+      color:#cacaca;
+    }
+    .cat li:hover{
+      border-bottom:2px solid #007BFF;
+      cursor:pointer;
+    }
+    .cat li:hover a{
+      color:#007BFF;
+      background-color: rgb(240, 246, 255) !important;
+      padding: 8px;
+      border-radius:5px;
+    }
+    .cat li.active a{
+      color:#007BFF;
+      background-color: rgb(240, 246, 255) !important;
+      padding: 8px;
+      border-radius:5px;
+    }
+    .cat li.active{
+      border-bottom:2px solid #007BFF;
+      cursor:pointer;
+    }
+    /* .order li.active
+    {
+      background-color: rgb(240, 246, 255) !important;
+    } */
+    .card .card-title{
+      font-family: sf pro display,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -.02rem;
+      font-size: 1.6rem;
+    }   
+    .card .card-text{
+      font-weight: 400;
+      line-height: 1.4;
+      font-size: 1.2rem;
+    }
+
+    #exampleModalLong body {
+  background: #ddd;
+  min-height: 100vh;
+  vertical-align: middle;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#exampleModalLong .card {
+  margin: auto;
+  width: 600px;
+  padding: 3rem 3.5rem;
+  -webkit-box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#exampleModalLong .mt-50 {
+  margin-top: 50px;
+}
+
+#exampleModalLong .mb-50 {
+  margin-bottom: 50px;
+}
+
+@media (max-width: 767px) {
+  #exampleModalLong .cart {
+    width: 90%;
+    padding: 1.5rem;
+  }
+}
+
+@media (height: 1366px) {
+  #exampleModalLong .card {
+    width: 90%;
+    padding: 8vh;
+  }
+}
+
+#exampleModalLong .card-title {
+  font-weight: 700;
+  font-size: 2.5em;
+}
+
+#exampleModalLong .nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#exampleModalLong .nav ul {
+  list-style-type: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-padding-start: unset;
+          padding-inline-start: unset;
+  margin-bottom: 6vh;
+}
+
+#exampleModalLong .nav li {
+  padding: 1rem;
+}
+
+#exampleModalLong .nav li a {
+  color: black;
+  text-decoration: none;
+}
+
+#exampleModalLong .active {
+  border-bottom: 2px solid black;
+  font-weight: bold;
+}
+
+#exampleModalLong input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+  width: 100%;
+  min-width: unset;
+  background-color: transparent;
+  border-color: transparent;
+  margin: 0;
+}
+
+#exampleModalLong form a {
+  color: grey;
+  text-decoration: none;
+  font-size: 0.87rem;
+  font-weight: bold;
+}
+
+#exampleModalLong form a:hover {
+  color: grey;
+  text-decoration: none;
+}
+
+#exampleModalLong form .row {
+  margin: 0;
+  overflow: hidden;
+}
+
+#exampleModalLong form .row-1 {
+  border: 1px solid rgba(0, 0, 0, 0.137);
+  padding: 0.5rem;
+  outline: none;
+  width: 100%;
+  min-width: unset;
+  border-radius: 5px;
+  background-color: rgba(221, 228, 236, 0.301);
+  border-color: rgba(221, 228, 236, 0.459);
+  margin: 2vh 0;
+  overflow: hidden;
+}
+
+#exampleModalLong form .row-2 {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0 0.8rem;
+}
+
+#exampleModalLong form .row .row-2 {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0 0.8rem;
+}
+
+#exampleModalLong form .row .col-2,
+#exampleModalLong .col-7,
+#exampleModalLong .col-3 {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+  padding: 0 1vh;
+}
+
+#exampleModalLong form .row .col-2 {
+  padding-right: 0;
+}
+
+#exampleModalLong #card-header {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+#exampleModalLong #card-inner {
+  font-size: 0.7rem;
+  color: gray;
+}
+
+#exampleModalLong .three .col-7 {
+  padding-left: 0;
+}
+
+#exampleModalLong .three {
+  overflow: hidden;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#exampleModalLong .three .col-2 {
+  border: 1px solid rgba(0, 0, 0, 0.137);
+  padding: 0.5rem;
+  outline: none;
+  width: 100%;
+  min-width: unset;
+  border-radius: 5px;
+  background-color: rgba(221, 228, 236, 0.301);
+  border-color: rgba(221, 228, 236, 0.459);
+  margin: 2vh 0;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  overflow: hidden;
+}
+
+#exampleModalLong .three .col-2 input {
+  font-size: 0.7rem;
+  margin-left: 1vh;
+}
+
+#exampleModalLong .subcard {
+  width: 100%;
+  background-color: #41ca7f;
+  border-color: #41ca7f;
+  color: white;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 2vh 0;
+  margin-top: 3vh;
+}
+
+#exampleModalLong .btn:focus {
+  box-shadow: none;
+  outline: none;
+  box-shadow: none;
+  color: white;
+  -webkit-box-shadow: none;
+  -webkit-user-select: none;
+  -webkit-transition: none;
+  transition: none;
+}
+
+#exampleModalLong .btn:hover {
+  color: white;
+}
+
+#exampleModalLong input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+#exampleModalLong input:focus:-moz-placeholder {
+  color: transparent;
+}
+
+#exampleModalLong input:focus::-moz-placeholder {
+  color: transparent;
+}
+
+#exampleModalLong input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+.checkopacity{
+  opacity: 0.8;
+}
+
+</style>
   <script>
 
     var voice = {
@@ -457,6 +878,7 @@ if(!empty($_POST["submod"]))
       voice.recog.onresult = (evt) => {
         let said = evt.results[0][0].transcript.toLowerCase();
         said = said.replace('.','');
+        
         document.querySelector(".filter-option-inner-inner").textContent = said;
         // voice.sfield.value = said;
         // aria-expanded
@@ -510,6 +932,7 @@ if(!empty($_POST["submod"]))
   start : () => {
     voice.recog.start();
     voice.sbtn.onclick = voice.stop;
+    document.querySelector("#voicestop").onclick = voice.stop;
     voice.sbtn.classList.add('effectactive');
     document.getElementById("spchicon").classList.remove("text-secondary");
     // voice.sbtn.textContent = "Speak Now Or Click Again To Cancel";
@@ -549,6 +972,14 @@ window.addEventListener('DOMContentLoaded', voice.init);
 
 
   $(document).ready(function(){
+    var test = true;
+    $(".e-d-show").click(function(){
+
+      if(test) 
+      {$(this).next().css("visibility","visible");test = false;}
+      else 
+      {$(this).next().css("visibility","hidden");test = true;}
+    })
 
     var json_info;
     $.when(get_json({getcity : "not empty"}),get_json({api : "not"}))
@@ -566,8 +997,109 @@ window.addEventListener('DOMContentLoaded', voice.init);
     $("#err span").click(function(){
       $(this).parent().removeClass("err");
     });
+
+    //load courses
+    $.ajax({
+      type:"post",
+      url:"cardaff.php",
+      data:{catid:"0' or '1' = '1",order:"price",limit:1},
+      async:false,
+      beforeSend:function (){
+        // $("#products").addClass("text-center");
+        $(".rescard").html("<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>");
+      },
+      success:function(dt){
+        $(".rescard").html(dt);
+        paginationload();
+        $(".pagination li").first().addClass("active");
+        
+      },
+      complete: function () {
+        addto();
+      }
+    });
+
+    $(".cat li").click(function()
+    {
+      // console.log($(this).find("a").attr('v'));
+      var idcar = $(this).find("a").attr('v');
+      $.ajax({
+          type:"post",
+          url:"cardaff.php",
+          data:{catid:idcar,order:"price",limit:1},
+          async:false,
+          beforeSend:function (){
+            // $("#products").addClass("text-center");
+            $(".rescard").html("<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>");
+          },
+          success:function(dt){
+            $(".rescard").html(dt);
+            paginationload();
+            $(".cat li").removeClass("active");
+            console.log("hh "+idcar);
+            $(`a[v="${idcar}"]`).parent().addClass("active");
+            $(".pagination li").first().addClass("active");
+          },
+          complete: function () {
+            addto();
+          }
+        });
+      // if(idcar == "0' or '1' = '1" )
+      // {
+
+      // }
+      // else{
+      //   $.post("cardaff.php",{catid:idcar,order:$(".order").val(),limit:1},function(dt,st){
+      //   $(".rescard").html(dt);
+      //   paginationload();
+      //   $(".cat li").removeClass("active");
+      //   $("a[v="+idcar+"]").parent().addClass("active");
+      //   if(st == "success") addto();
+      //   })
+      // }
+
+    })
+
+    
+    $(".order").change(function()
+    {
+      // console.log($(this).find("a").attr('v'));
+      // console.log("ff");
+      var order = $(this).val();
+      $.post("cardaff.php",{catid : $(".cat li.active").find("a").attr('v'),order:order,limit:parseInt($(".pagination li.active a").text())},function(dt){
+        $(".rescard").html(dt);
+        addto();
+        // console.log($("a[v="+idcar+"]").attr('v'));
+        paginationload();
+      })
+    })
+
   
-      
+    //load courses
+
+      $(".np").click(function()
+      {
+        if($(this).val() == "payment")
+        {
+          $("#payment").css("display","block");
+          $("#products").css("display","none");
+          $(this).val("return");
+          $(this).text("return");
+          $(this).removeClass("btn-success");
+          $(this).addClass("btn-secondary");
+        }
+        else
+        {
+          $("#payment").css("display","none");
+          $("#products").css("display","block");
+          $(this).val("payment");
+          $(this).text("payment");
+          $(this).addClass("btn-success");
+          $(this).removeClass("btn-secondary");
+        }
+        // ;
+      })
+
       $("#save").click(function(){
         var form_data = new FormData();
         let imgdata = document.getElementById('img').files[0];
@@ -588,12 +1120,14 @@ window.addEventListener('DOMContentLoaded', voice.init);
           data:form_data,          
           success:function(data,statu,xhr)
           {
-            // $("#sec").find(".cont").html("seccucfuly change");
-            // $("#sec").addClass("sec");
-            // setTimeout(()=>{
-            // $("#sec").removeClass("sec");
-            // },6000);
-
+            $("#sec").find(".cont").html("successfuly save");
+            $("#sec").addClass("sec");
+            $("#sec").find(".fas").click(function(){
+              $("#sec").removeClass("sec");
+            })
+            setTimeout(()=>{
+              $("#sec").removeClass("sec");
+            },6000);
             $.when(get_json({api : "not"}))
             .done(function(dt)
             {
@@ -665,7 +1199,9 @@ window.addEventListener('DOMContentLoaded', voice.init);
 
 
 
-
+      $(".fa-shopping-cart").click(function(){
+        affitems();
+      })
 
       var emailreg =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
       var email = $('#email').val();
@@ -766,7 +1302,8 @@ window.addEventListener('DOMContentLoaded', voice.init);
             $(this).parent().addClass('bad'); 
             $(this).next().html('Already exists');
             $("#save").attr("disabled", true); 
-            $("#pass").attr("disabled", true);   
+            $("#pass").attr("disabled", true);
+            $(".pass2").attr("disabled", true);   
             $(".testpass input").next().html('');      
           }
           else{
@@ -775,6 +1312,7 @@ window.addEventListener('DOMContentLoaded', voice.init);
             $(this).next().html('Good');
             $("#save").attr("disabled", false);
             $("#pass").attr("disabled", false);
+            (".pass2").attr("disabled", true);  
           }
         }
         else
@@ -869,9 +1407,22 @@ window.addEventListener('DOMContentLoaded', voice.init);
             })
           }
           var citys = $("#gate").val();
-          $.post("affusers.php",{ville:citys},function(data){
-            $(".res").html(data);
-          })
+          $.ajax({
+            type:"post",
+            url:"affusers.php",
+            data:{ville:citys},
+            async:false,
+            beforeSend:function (){
+            $(".res").addClass("text-center");
+            $(".res").html("<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>");
+            },
+            success:function(data){
+              $(".res").removeClass("text-center");
+              if(data == "") $(".res").html("vide")
+              else $(".res").html(data)
+              
+            }
+          });
         }
         else
         {
@@ -913,33 +1464,142 @@ window.addEventListener('DOMContentLoaded', voice.init);
   }
 
 
-
-
-
-  // function get_city()
-  // {
-  //   $.when(get_json({getcity : "not empty"}))
-  //   .done(function(dt)
-  //   {
-  //       let citys = JSON.parse(dt);
+function paginationload(){
+  $("ul.pagination li a").click(function()
+    {
+      // alert("ff");
+      // console.log($(this).find("a").attr('v'));
+      
+      var orderpag = $(".order").val();
+      var inject = $(".cat li.active").find("a").attr('v');
+      var limit=  $(this).text();
+      $.post("cardaff.php",{catid : inject,order:orderpag,limit:parseInt(limit)},function(dt){
+        $(".rescard").html(dt);
+        $(".pagination li").removeClass("active");
+        $(`a[vp="${limit}"]`).parent().addClass("active");
+        paginationload();
         
-  //       var texthtml = `<option value="all">All</option>`;
+        addto();
+        // console.log($("a[v="+idcar+"]").attr('v'));
+      })
+    })
+}
 
-  //       for (let item of citys)
-  //       {
-  //         console.log(item);
-  //         texthtml += `<option value="${item}">${item}</option>`;
-  //       }
-  //       $("#gate").html(texthtml);
-  //   });
-   
-  // }
+function affitems(){
+
+  $.ajax({
+          type:"post",
+          url:"panier.php",
+          data:{aff:"aff"},
+          cache:false,
+          beforeSend:function (){
+            $("#products").addClass("text-center");
+            $("#products").html("<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>");
+          },
+          success:function (data){
+            // console.log("dd"+data);
+            if(data == "") $("#products").html("vide")
+            else {
+                $("#products").removeClass("text-center");
+                $("#products").html(data)
+              }
+              var testv = true;
+              $(".e-d-show").click(function(){
+                
+                if(testv) 
+                {$(this).next().css("visibility","visible");testv = false;}
+                else 
+                {$(this).next().css("visibility","hidden");testv = true;}
+              })
+              $(".qntchange").change(function(){
+                var newqnt = $(this).val();
+                $.post("panier.php",{changeqnt:newqnt,id:$(this).attr('iditem')},function(dt){
+                  console.log(dt);
+                  affitems();
+                })
+              })
+              $(".fa-trash-alt").click(function(){
+                $.post("panier.php",{delete:$(this).attr('iditem')},function(dt)
+                {
+                  console.log(dt);
+                  affitems();
+                  $("#badge").text(parseInt($("#badge").text())-1);
+                })
+              })
+              $('.delcheck').click(function(){
+                $(this).parents(".prd").toggleClass('checkopacity');
+              })
+              
+              $("#del").click(function(){
+                var mycheckarray = [];
+                var countofdelet = 0;
+                $('.delcheck:checked').each(function() {
+                  mycheckarray.push($(this).val());
+                  countofdelet++;
+                });
+                console.log(mycheckarray); 
+                $.post("panier.php",{subdelete:mycheckarray},function(dt)
+                {
+                  console.log("enter"); 
+                  affitems();
+                  $("#badge").text(parseInt($("#badge").text()) - countofdelet);
+                })
+              })
+              $("#selshow").click(function(){
+                $("#selall").toggleClass("d-none");
+                $(".delcheck").each(function(){
+                  $(this).toggleClass("d-none");
+                })
+                $(this).parent().toggleClass("justify-content-between");
+                if($(this).text() == "select")
+                {
+                  $(this).text("cancel");
+                  $("#del").attr("disabled", false);
+                }
+                else 
+                {
+                  $(this).text("select");
+                  $("#del").attr("disabled", true);
+                  $(".delcheck").each(function(){
+                  $(this).attr("checked",false);
+                })
+                }
+              })
+              $("#selall").click(function(){
+                $(".delcheck").each(function(){
+                  $(this).attr("checked",true);
+                })
+              })
+          }
+        })
+        $.post("panier.php",{total:"t"},function(dt){
+          $("#total").text(`total : $${dt}`);
+        })
+
+}
 
 
+function addto()
+{
 
+  $('.addto').click(function(){  
+      let id = $(this).val();
+      let name = $(this).parents(".card").find("#name").text();      
+      let dsc = $(this).parents(".card").find("#dsc").text();
+      let img = $(this).parents(".card").find("#img").attr("src");
+      let price = $(this).parents(".card").find("#price").text();
+      price = price.substr(1,price.indexOf(" "));
+      // $_POST['name'];
+      // $dsc = $_POST['dsc'];
+      // $img = $_POST['img'];
+      // $price = floatval($_POST['price']);
+      $.post("panier.php",{addprd:"yes",id:id,name:name,dsc:dsc,img:img,price:price},function(data){
+        console.log(data);
+        $("#badge").text(parseInt($("#badge").text()) + 1);
 
-
-
+      })
+  })
+}
 
 
 

@@ -11,9 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <?php
-      include_once 'modul.php';
-      include_once "user.php";
+      // include_once 'modul.php';
+      // include_once "user.php";
       include_once "manage.php";
+      include_once "classpanier.php";
 
       session_start();
       // session_destroy();
@@ -41,6 +42,9 @@
         { 
           //create object user from class user and set in session["user"]  
           $_SESSION["user"] = $test;
+          $_SESSION["id"] = $test[0];
+          $_SESSION["panier"] = new panier();
+          Manager::setpanier();
           //check if checkboox chcked to create coockie
             if(isset($_POST["check"]))
             {
